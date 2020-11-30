@@ -5,6 +5,11 @@
     | Value of v
     | Right_parenthesis
     | Colon
+
+  let expect_value = function
+    | Value v -> v
+    | Right_parenthesis -> failwith "unexpected ')'"
+    | Colon -> failwith "unexpected ':'"
 }
 
 (* FIXME *)
@@ -25,12 +30,7 @@ and value = parse
   | 'J' { Value (Primitive Long) }
   | 'F' { Value (Primitive Float) }
   | 'D' { Value (Primitive Double) }
-  | '['+ as dim {
-    match value lexbuf with
-    | Right_parenthesis -> failwith "unexpected ')'"
-    | Colon -> failwith "unexpected ':'"
-    | Value v -> Value (Array (String.length dim, v))
-  }
+  | '['+ as dim { Value (Array (String.length dim, expect_value (value lexbuf))) }
   | 'L' { Value (obj [] lexbuf) }
   | ')' { Right_parenthesis }
   | ':' { Colon }
@@ -44,18 +44,12 @@ and meth' obj = parse
       | Colon -> failwith "unexpected ':'"
     in
     let params = f [] in
-    match value lexbuf with
-    | Value ret -> {obj; meth; params; ret}
-    | Right_parenthesis -> failwith "unexpected ')'"
-    | Colon -> failwith "unexpected ':'"
+    {obj; meth; params; ret = expect_value (value lexbuf)}
   }
 
 {
   let value lexbuf =
-    match value lexbuf with
-    | Value v -> v
-    | Right_parenthesis -> failwith "unexpected ')'"
-    | Colon -> failwith "unexpected ':'"
+    expect_value (value lexbuf)
 
   let meth lexbuf =
     match value lexbuf with
