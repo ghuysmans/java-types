@@ -51,8 +51,12 @@ and meth' obj = parse
   let value lexbuf =
     expect_value (value lexbuf)
 
-  let meth lexbuf =
+  let expect_object lexbuf =
     match value lexbuf with
-    | Object obj -> meth' obj lexbuf
+    | Object obj -> obj
     | _ -> failwith "unexpected non-object type"
+
+  let meth lexbuf =
+    let obj = expect_object lexbuf in
+    meth' obj lexbuf
 }
