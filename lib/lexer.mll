@@ -36,7 +36,7 @@ and value = parse
   | ':' { Colon }
 
 and meth' obj = parse
-  | "->" meth as meth '(' {
+  | "->" (meth as meth) '(' {
     let rec f params =
       match value lexbuf with
       | Value v -> f (v :: params)
