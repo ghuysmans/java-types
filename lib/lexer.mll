@@ -56,16 +56,11 @@ and field' obj = parse
   let value lexbuf =
     expect_value (value lexbuf)
 
-  let expect_object lexbuf =
+  let access k lexbuf =
     match value lexbuf with
-    | Object obj -> obj
+    | Object obj -> k obj lexbuf
     | _ -> failwith "unexpected non-object type"
 
-  let meth lexbuf =
-    let obj = expect_object lexbuf in
-    meth' obj lexbuf
-
-  let field lexbuf =
-    let obj = expect_object lexbuf in
-    field' obj lexbuf
+  let meth = access meth'
+  let field = access field'
 }
