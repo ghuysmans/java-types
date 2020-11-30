@@ -9,7 +9,7 @@
 
 (* FIXME *)
 let package = ['a'-'z']+
-let cls = ['A'-'Z']['a'-'z']*
+let cls = ['A'-'Z']['A'-'Z''a'-'z']*
 let meth = ['A'-'Z''a'-'z']+
 
 rule obj path = parse
