@@ -12,6 +12,16 @@ type p =
 type o = {path: string list; cls: string}
 (* FIXME what about internal classes? *)
 
+let obj = {
+  path = ["java"; "lang"];
+  cls = "Object";
+}
+
+let string = {
+  path = ["java"; "lang"];
+  cls = "String";
+}
+
 type v =
   | Primitive of p
   (* reference *)
