@@ -1,2 +1,2 @@
 (ocamllex (modules lexer))
-(library (name java) (inline_tests) (preprocess (pps ppx_inline_test)))
+(library (name java) (inline_tests) (preprocess (pps ppx_inline_test ppx_deriving.show)))
