@@ -48,3 +48,11 @@ let%test _ = parse "Ljava/lang/Object;->method(I[[IILjava/lang/String;[Ljava/lan
   ];
   ret = Object string;
 }
+
+let parse s = Lexer.field (Lexing.from_string s)
+
+let%test _ = parse "Ljava/lang/Object;->FieldName:Ljava/lang/String;" = {
+  obj;
+  field = "FieldName";
+  typ = Object string;
+}

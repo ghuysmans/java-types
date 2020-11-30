@@ -15,7 +15,7 @@
 (* FIXME *)
 let package = ['a'-'z']+
 let cls = ['A'-'Z']['A'-'Z''a'-'z']*
-let meth = ['A'-'Z''a'-'z']+
+let field_or_meth = ['A'-'Z''a'-'z']+
 
 rule obj path = parse
   | package as p '/' { obj (p :: path) lexbuf }
@@ -36,7 +36,7 @@ and value = parse
   | ':' { Colon }
 
 and meth' obj = parse
-  | "->" (meth as meth) '(' {
+  | "->" (field_or_meth as meth) '(' {
     let rec f params =
       match value lexbuf with
       | Value v -> f (v :: params)
@@ -45,6 +45,11 @@ and meth' obj = parse
     in
     let params = f [] in
     {obj; meth; params; ret = expect_value (value lexbuf)}
+  }
+
+and field' obj = parse
+  | "->" (field_or_meth as field) ':' {
+    {obj; field; typ = expect_value (value lexbuf)}
   }
 
 {
@@ -59,4 +64,8 @@ and meth' obj = parse
   let meth lexbuf =
     let obj = expect_object lexbuf in
     meth' obj lexbuf
+
+  let field lexbuf =
+    let obj = expect_object lexbuf in
+    field' obj lexbuf
 }
